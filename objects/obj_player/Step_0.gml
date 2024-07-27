@@ -1,5 +1,39 @@
+function check_vertical_collisions() {
+    if (vsp > 0) { // Falling
+        if (place_meeting(x, y + vsp, obj_ground) || place_meeting(x, y + vsp, obj_block)) {
+            while (!place_meeting(x, y + 1, obj_ground) && !place_meeting(x, y + 1, obj_block)) {
+                y += 1;
+            }
+            y -= 1;
+            vsp = 0;
+            on_ground = true;
+        }
+    } else if (vsp < 0) { // Jumping
+        if (place_meeting(x, y + vsp, obj_ground) || place_meeting(x, y + vsp, obj_block)) {
+            while (!place_meeting(x, y - 1, obj_ground) && !place_meeting(x, y - 1, obj_block)) {
+                y -= 1;
+            }
+            y += 1;
+            vsp = 0;
+        }
+    }
+}
+
+function check_horizontal_collisions() {
+    if (place_meeting(x + hsp, y, obj_ground) || place_meeting(x + hsp, y, obj_block)) {
+        while (!place_meeting(x + sign(hsp), y, obj_ground) && !place_meeting(x + sign(hsp), y, obj_block)) {
+            x += sign(hsp);
+        }
+        hsp = 0;
+    }
+}
+
+// Apply gravity
+if (!on_ground) {
+    vsp += grv;
+}
+
 // Horizontal movement
-hsp = 0;
 if (keyboard_check(vk_left)) {
     hsp = -move_speed;
 } else if (keyboard_check(vk_right)) {
@@ -8,14 +42,15 @@ if (keyboard_check(vk_left)) {
 	hsp = 0;
 }
 
+// Check for horizontal collisions
+check_horizontal_collisions();
 
 // Apply horizontal movement
 x += hsp;
 
-// Apply gravity
-if (!on_ground) {
-    vsp += grv;
-}
+// Apply vertical movement and check for vertical collisions
+y += vsp;
+check_vertical_collisions();
 
 // Check for jumping
 if (keyboard_check_pressed(vk_space) && on_ground) {
@@ -23,20 +58,8 @@ if (keyboard_check_pressed(vk_space) && on_ground) {
     on_ground = false;
 }
 
-// Apply vertical movement
-y += vsp;
-
-
-if (place_meeting(x, y + 1, obj_ground)) {
-	on_ground = true;
-	vsp = 0;      // Stop the downward movement
-	
-    // Adjust the player's position to be on top of the ground
-    while (!place_meeting(x, y, obj_ground)) {
-        y += 1;
-    }
-    y -= 1;
-} else {
+// Check if the player is still on the ground
+if (!place_meeting(x, y + 1, obj_ground) && !place_meeting(x, y + 1, obj_block)) {
     on_ground = false;
 }
 
