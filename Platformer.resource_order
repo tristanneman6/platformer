@@ -18,6 +18,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"obj_block","order":2,"path":"objects/obj_block/obj_block.yy",},
+    {"name":"obj_fullscreen","order":5,"path":"objects/obj_fullscreen/obj_fullscreen.yy",},
     {"name":"obj_ground","order":3,"path":"objects/obj_ground/obj_ground.yy",},
     {"name":"obj_parralax_background_world1","order":4,"path":"objects/obj_parralax_background_world1/obj_parralax_background_world1.yy",},
     {"name":"obj_pauser","order":1,"path":"objects/obj_pauser/obj_pauser.yy",},
